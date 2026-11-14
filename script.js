@@ -53,7 +53,7 @@
         return;
       }
       var body = 'Name: ' + name + '\nEmail: ' + email + '\nInterested in: ' + interest + '\n\n' + message;
-      window.location.href = 'mailto:hello@jesm.com?subject=' +
+      window.location.href = 'mailto:support@jesm.co.in?subject=' +
         encodeURIComponent('Consultation request from ' + name) + '&body=' + encodeURIComponent(body);
       note.textContent = 'Your email app should open with the message ready to send.';
     });
