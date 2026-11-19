@@ -302,3 +302,4 @@ button,input,select,textarea{font:inherit;color:inherit;}
   html{scroll-behavior:auto;}
 }
 .hero-caption:not([data-p]) .sw{display:none;}
+.about-body .motto{color:var(--ink);font-weight:600;font-style:italic;}
