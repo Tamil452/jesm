@@ -37,7 +37,9 @@
     list.addEventListener('focusout', function (e) { if (!list.contains(e.relatedTarget)) show('all'); });
   }
 
-  // Contact form: opens the visitor's email app with the details filled in
+  // Contact form: saves to a Google Sheet via an Apps Script web app (see google-sheet/Code.gs).
+  // Paste the deployed /exec URL below; while empty, the form falls back to opening the email app.
+  var SHEET_URL = '';
   var form = document.getElementById('contactForm');
   if (form) {
     var note = document.getElementById('cf-note');
@@ -52,10 +54,22 @@
         (!name ? form.name : (!email || !form.email.checkValidity()) ? form.email : form.message).focus();
         return;
       }
-      var body = 'Name: ' + name + '\nEmail: ' + email + '\nInterested in: ' + interest + '\n\n' + message;
-      window.location.href = 'mailto:support@jesm.co.in?subject=' +
-        encodeURIComponent('Consultation request from ' + name) + '&body=' + encodeURIComponent(body);
-      note.textContent = 'Your email app should open with the message ready to send.';
+      var btn = form.querySelector('button[type="submit"]');
+      var fallback = function () {
+        var body = 'Name: ' + name + '\nEmail: ' + email + '\nInterested in: ' + interest + '\n\n' + message;
+        window.location.href = 'mailto:support@jesm.co.in?subject=' +
+          encodeURIComponent('Consultation request from ' + name) + '&body=' + encodeURIComponent(body);
+        note.textContent = 'Your email app should open with the message ready to send.';
+      };
+      if (!SHEET_URL) { fallback(); return; }
+      btn.disabled = true;
+      note.textContent = 'Sending…';
+      // Apps Script web apps don't send CORS headers, so use no-cors and treat a completed request as sent.
+      fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: new URLSearchParams({
+        name: name, email: email, interest: interest, message: message }) })
+        .then(function () { form.reset(); note.textContent = 'Thank you! We have received your message and will be in touch soon.'; })
+        .catch(function () { fallback(); })
+        .then(function () { btn.disabled = false; });
     });
   }
 })();
