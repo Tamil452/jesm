@@ -39,7 +39,7 @@
 
   // Contact form: saves to a Google Sheet via an Apps Script web app (see google-sheet/Code.gs).
   // Paste the deployed /exec URL below; while empty, the form falls back to opening the email app.
-  var SHEET_URL = '';
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbxt9ATEN98XZdWFaSIlpMuTfXTe4xcGZ8ltR64elIxLDB4tAXeDwdRfgJrxVJIfcWX6DA/exec';
   var form = document.getElementById('contactForm');
   if (form) {
     var note = document.getElementById('cf-note');
